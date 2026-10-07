@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepverse Network | Server Gallery</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Press+Start+2P&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Space Grotesk', 'Inter', 'sans-serif'],
+                        pixel: ['"Press Start 2P"', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#030712',
+                            card: '#0b0f19',
+                            cyan: '#06b6d4',
+                            indigo: '#6366f1',
+                            violet: '#8b5cf6',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #030712;
+            overflow-x: hidden;
+            color: #f3f4f6;
+        }
+
+        /* Glassmorphism Styles */
+        .glass-panel {
+            background: rgba(11, 15, 25, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-panel-glow {
+            background: rgba(11, 15, 25, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(6, 182, 212, 0.05);
+        }
+
+        /* Animated Gradients */
+        .gradient-text {
+            background: linear-gradient(135deg, #22d3ee 0%, #818cf8 50%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Floating Animation */
+        .float-animation {
+            animation: floatY 6s ease-in-out infinite;
+        }
+
+        @keyframes floatY {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Pulsing Glow */
+        .pulse-glow {
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(6, 182, 212, 0.15); }
+            50% { box-shadow: 0 0 30px rgba(6, 182, 212, 0.35); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030712;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+
+        /* Staggered Transitions */
+        .gallery-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gallery-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body class="relative min-h-screen flex flex-col justify-between">
+
+    <!-- Interactive Canvas Particles Background -->
+    <canvas id="particleCanvas" class="absolute top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Cosmic Glow Background Orbs -->
+    <div class="absolute top-1/4 left-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
+    <div class="absolute top-2/3 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
+
+    <!-- MAIN HEADER -->
+    <header class="sticky top-0 z-50 w-full px-4 md:px-8 py-4 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto glass-panel rounded-2xl px-6 py-3 flex justify-between items-center transition-all duration-300">
+            
+            <!-- Brand Logo Area -->
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                    <img src="https://i.ibb.co/QvnjHQsg/nepverseofficiallogo-removebg-preview.png" class="w-10 h-10 object-contain" alt="Nepverse Logo">
+                </div>
+                <div>
+                    <h1 class="font-pixel text-xs tracking-wider text-cyan-400">NEPVERSE</h1>
+                    <p class="text-[10px] tracking-widest text-slate-400 uppercase">Minecraft Network</p>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="index.html" class="hover:text-cyan-400 transition-colors">Home</a>
+                
+                <a href="gallery.html" class="text-cyan-400 transition-colors font-semibold">Gallery</a>
+                <a href="store.html" class="hover:text-cyan-400 transition-colors">Store</a>
+            </nav>
+
+            <!-- Server IP Copy Button (Hollow Premium Border style) -->
+            <div class="flex items-center gap-3">
+                <button onclick="copyIP()" class="relative group px-5 py-2.5 rounded-xl border border-cyan-400/50 hover:border-cyan-400 text-cyan-400 font-semibold text-sm transition-all hover:bg-cyan-500/10 active:scale-95 pulse-glow">
+                    <span class="relative z-10 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                        </svg>
+                        <span id="copyText">COPY IP</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- SERVER GALLERY HERO SECTION -->
+    <main class="relative z-10 max-w-7xl mx-auto px-6 pt-12 md:pt-20 pb-24 w-full flex-grow">
+        
+        <!-- Centered Main Header -->
+        <div class="text-center space-y-6 max-w-3xl mx-auto mb-16">
+            <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold uppercase tracking-wider">
+                <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
+                <span>Visual Tour</span>
+            </div>
+            
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-none">
+                Server <span class="gradient-text">Gallery</span>
+            </h1>
+            
+            <p class="text-slate-300 text-base md:text-lg leading-relaxed">
+                Step inside our custom-designed virtual landscapes, glorious spawn architecture, competitive action zones, and spectacular community masterpieces.
+            </p>
+        </div>
+
+        <!-- CATEGORY SLIDER CONTROL COMPONENT (< Category >) -->
+        <div class="max-w-xl mx-auto mb-12 flex items-center justify-between p-2 rounded-2xl glass-panel border border-slate-800/80">
+            <!-- Left Slider Arrow -->
+            <button onclick="changeCategory(-1)" class="w-12 h-12 rounded-xl flex items-center justify-center border border-slate-800 hover:border-cyan-400 text-slate-400 hover:text-cyan-400 bg-slate-950/40 hover:bg-cyan-500/5 transition-all active:scale-90" aria-label="Previous Category">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+
+            <!-- Active Category Title & Display -->
+            <div class="text-center flex-grow px-4 select-none">
+                <span id="slider-indicator" class="font-pixel text-[10px] text-cyan-400 tracking-widest block mb-1">PANEL 1 / 4</span>
+                <h3 id="active-category-title" class="text-lg md:text-xl font-bold text-white uppercase tracking-wider transition-all duration-300">SPAWN LOBBIES</h3>
+            </div>
+
+            <!-- Right Slider Arrow -->
+            <button onclick="changeCategory(1)" class="w-12 h-12 rounded-xl flex items-center justify-center border border-slate-800 hover:border-cyan-400 text-slate-400 hover:text-cyan-400 bg-slate-950/40 hover:bg-cyan-500/5 transition-all active:scale-90" aria-label="Next Category">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Sub-description of current Category Panel -->
+        <p id="category-description" class="text-center text-slate-400 max-w-xl mx-auto mb-12 text-sm leading-relaxed min-h-[40px] transition-all duration-300">
+            Where your journey begins. Explore beautiful architecture, hubs, and server portals.
+        </p>
+
+        <!-- DYNAMIC PANEL (ROW & COLUMN GRID) -->
+        <div id="gallery-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <!-- Populated Dynamically via JS with premium hover zooms and detailed cards -->
+        </div>
+
+    </main>
+
+    <!-- FULL SCREEN INTERACTIVE LIGHTBOX MODAL -->
+    <div id="lightbox" class="fixed inset-0 z-50 hidden bg-brand-dark/95 backdrop-blur-xl flex flex-col justify-between p-6">
+        <!-- Close & Controls Header -->
+        <div class="flex justify-between items-center w-full max-w-7xl mx-auto">
+            <div class="flex items-center gap-3">
+                <img src="https://i.ibb.co/QvnjHQsg/nepverseofficiallogo-removebg-preview.png" class="w-8 h-8 object-contain" alt="Logo">
+                <span class="font-pixel text-[10px] text-cyan-400 tracking-wider">NEPVERSE PREVIEW</span>
+            </div>
+            <button onclick="closeLightbox()" class="w-10 h-10 rounded-full border border-slate-800 text-slate-400 hover:text-white flex items-center justify-center hover:bg-white/5 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Center Image Viewport -->
+        <div class="flex-grow flex items-center justify-center relative p-4 max-w-5xl mx-auto w-full">
+            <button onclick="navigateLightbox(-1)" class="absolute left-0 md:-left-16 w-12 h-12 rounded-full border border-slate-800/80 bg-slate-950/60 text-slate-300 hover:text-cyan-400 flex items-center justify-center transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+
+            <img id="lightbox-img" class="max-h-[70vh] max-w-full rounded-2xl object-contain shadow-2xl border border-slate-800/80" src="" alt="Active Gallery Element">
+
+            <button onclick="navigateLightbox(1)" class="absolute right-0 md:-right-16 w-12 h-12 rounded-full border border-slate-800/80 bg-slate-950/60 text-slate-300 hover:text-cyan-400 flex items-center justify-center transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Captions & Info Footer -->
+        <div class="text-center max-w-2xl mx-auto pb-4 space-y-1">
+            <h4 id="lightbox-title" class="text-lg font-bold text-white">Title</h4>
+            <p id="lightbox-desc" class="text-sm text-slate-400">Description details</p>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="relative z-10 py-12 border-t border-slate-900/80 bg-brand-dark/90 backdrop-blur-md w-full">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-12 gap-8 items-center">
+            
+            <div class="md:col-span-6 space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 flex items-center justify-center">
+                        <img src="https://i.ibb.co/QvnjHQsg/nepverseofficiallogo-removebg-preview.png" class="w-8 h-8 object-contain" alt="Nepverse Brand">
+                    </div>
+                    <span class="font-pixel text-[10px] tracking-wider text-cyan-400">NEPVERSE NETWORK</span>
+                </div>
+                <p class="text-xs text-slate-500 max-w-sm leading-relaxed">
+                    Nepverse Network is not affiliated with Mojang Studios or Microsoft. All registered trademarks are properties of their respective owners.
+                </p>
+            </div>
+
+            <div class="md:col-span-6 flex flex-wrap gap-8 justify-start md:justify-end text-sm text-slate-400">
+                <a href="index.html" class="hover:text-cyan-400 transition-colors">Home</a>
+                
+                
+                <a href="store.html" class="hover:text-cyan-400 transition-colors">Store</a>
+            </div>
+
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 mt-8 pt-8 border-t border-slate-900 flex flex-col sm:flex-row justify-between text-xs text-slate-500">
+            <p>&copy; 2026 Nepverse Network. Crafted with extreme premium care.</p>
+            <p class="mt-2 sm:mt-0">All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- SCRIPT SECTION -->
+    <script src="gallery.js"></script>
+</body>
+
+</html>
